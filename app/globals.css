@@ -1,0 +1,152 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #050505;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Keep section headings clear of the fixed navbar when jumping via #anchors
+   (used as the fallback when Lenis is disabled, e.g. reduced motion). */
+section[id] {
+  scroll-margin-top: 90px;
+}
+
+/* Lenis controls scroll; disable native smooth so they don't fight. */
+html.lenis {
+  scroll-behavior: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+body {
+  background-color: var(--bg);
+  color: #f5f5f5;
+  font-family: var(--font-sans), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* Hide default cursor only on pointer devices where the custom glow exists. */
+@media (hover: hover) and (pointer: fine) {
+  body {
+    cursor: none;
+  }
+  a,
+  button {
+    cursor: none;
+  }
+}
+
+::selection {
+  background: rgba(0, 209, 255, 0.3);
+  color: #fff;
+}
+
+/* Custom cursor ring tint while hovering interactive elements. */
+.cursor-ring.cursor-active {
+  background-color: rgba(0, 209, 255, 0.08);
+  border-color: rgba(0, 209, 255, 0.9);
+}
+
+/* --- Custom scrollbar --- */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #0e0e0e;
+}
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(#00d1ff, #8b5cf6);
+  border-radius: 8px;
+}
+
+@layer components {
+  /* Real glass — uses backdrop-filter. Reserve for elements over MOVING
+     content (the navbar), since re-blurring the backdrop each scroll frame is
+     the single most expensive paint on the page. */
+  .glass {
+    background: rgba(20, 20, 20, 0.5);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .glass-strong {
+    background: rgba(14, 14, 14, 0.78);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  /* Fake glass — solid translucent fill, NO backdrop-filter. On the dark
+     background it looks identical to .glass but costs nothing to scroll past.
+     Use this for the many static cards / chips. */
+  .panel {
+    background: rgba(22, 22, 24, 0.72);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .panel-strong {
+    background: rgba(14, 14, 16, 0.86);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .text-gradient {
+    background: linear-gradient(120deg, #ffffff 0%, #00d1ff 45%, #8b5cf6 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .neon-cyan {
+    text-shadow: 0 0 18px rgba(0, 209, 255, 0.55), 0 0 40px rgba(0, 209, 255, 0.25);
+  }
+}
+
+@layer utilities {
+  /* Animated tech grid background. */
+  .bg-tech-grid {
+    background-image:
+      linear-gradient(rgba(0, 209, 255, 0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 209, 255, 0.06) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+
+  /* Subtle film grain. */
+  .noise {
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  .mask-fade-x {
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+    mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+  }
+
+  .perspective {
+    perspective: 1000px;
+  }
+}
+
+/* Respect users who prefer no motion. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
