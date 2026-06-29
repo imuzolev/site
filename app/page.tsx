@@ -5,6 +5,7 @@ import { Preloader } from "@/components/shared/Preloader";
 import { CursorGlow } from "@/components/shared/CursorGlow";
 import { ScrollProgress } from "@/components/shared/ScrollProgress";
 import { NoiseOverlay } from "@/components/shared/NoiseOverlay";
+import { RobotAssistant } from "@/components/shared/RobotAssistant";
 import { Navbar } from "@/components/shared/Navbar";
 import { Marquee } from "@/components/shared/Marquee";
 import { Hero } from "@/components/sections/Hero";
@@ -40,6 +41,7 @@ export default function Home() {
       <CursorGlow />
       <ScrollProgress />
       <NoiseOverlay />
+      <RobotAssistant />
       <Navbar />
 
       <SmoothScroll>
