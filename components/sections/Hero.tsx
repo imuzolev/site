@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 import { useRef } from "react";
 import { SmartVideo } from "@/components/ui/SmartVideo";
 import { MagneticButton } from "@/components/ui/MagneticButton";
@@ -18,19 +18,28 @@ const SensorRig = dynamic(
   { ssr: false }
 );
 
-const titleWords = ["DRONES", "OF", "THE", "FUTURE"];
+// Background quadcopter with spinning rotors that lifts on hover.
+const DroneRig = dynamic(
+  () => import("@/components/shared/DroneRig").then((m) => m.DroneRig),
+  { ssr: false }
+);
 
-const word = {
-  hidden: { y: "110%", opacity: 0 },
-  visible: (i: number) => ({
-    y: "0%",
+const TITLE = "Аргус";
+
+// Staggered per-letter reveal: each glyph flips up out of the depth.
+const titleContainer = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.1, delayChildren: 0.45 } },
+};
+const letterReveal = {
+  hidden: { y: 70, opacity: 0, rotateX: 90, filter: "blur(10px)" },
+  visible: {
+    y: 0,
     opacity: 1,
-    transition: {
-      duration: 1,
-      delay: 0.6 + i * 0.12,
-      ease: [0.22, 1, 0.36, 1] as const,
-    },
-  }),
+    rotateX: 0,
+    filter: "blur(0px)",
+    transition: { duration: 0.9, ease: [0.22, 1, 0.36, 1] as const },
+  },
 };
 
 export function Hero() {
@@ -45,10 +54,19 @@ export function Hero() {
   const contentY = useTransform(scrollYProgress, [0, 1], [0, 180]);
   const contentOpacity = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
 
+  // Pointer-driven 3D tilt for the title (spring-smoothed, no re-renders).
+  const tiltX = useSpring(0, { stiffness: 120, damping: 18 });
+  const tiltY = useSpring(0, { stiffness: 120, damping: 18 });
+  const onPointerMove = (e: React.PointerEvent) => {
+    tiltY.set((e.clientX / window.innerWidth - 0.5) * 18);
+    tiltX.set((0.5 - e.clientY / window.innerHeight) * 14);
+  };
+
   return (
     <section
       ref={ref}
       id="top"
+      onPointerMove={onPointerMove}
       className="relative flex h-[100svh] min-h-[640px] w-full items-center justify-center overflow-hidden"
     >
       {/* Background video (animated gradient fallback if absent). */}
@@ -69,8 +87,9 @@ export function Hero() {
       {/* Animated corner brackets / HUD lines. */}
       <HudFrame />
 
-      {/* Interactive sci-fi sensor — part of the background composition. */}
-      <SensorRig />
+      {/* Interactive sci-fi sensors — part of the background composition. */}
+      <SensorRig place="lower-right" accent="cyan" />
+      <DroneRig place="upper-left" />
 
       {/* Content. */}
       <motion.div
@@ -87,22 +106,43 @@ export function Hero() {
           Autonomous Aerial Systems
         </motion.span>
 
-        <h1 className="font-display text-[15vw] font-bold leading-[0.9] tracking-tight text-white sm:text-[12vw] md:text-[9rem]">
-          {/* {titleWords.map((w, i) => (
-            <span key={w} className="mx-2 inline-block overflow-hidden align-bottom">
-              <motion.span
-                custom={i}
-                variants={word}
-                initial="hidden"
-                animate="visible"
-                className="inline-block"
+        <motion.div
+          style={{ rotateX: tiltX, rotateY: tiltY, transformPerspective: 1000 }}
+          className="[transform-style:preserve-3d]"
+        >
+          {/* Gentle idle float. */}
+          <motion.div
+            animate={{ y: [0, -10, 0] }}
+            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <motion.h1
+              variants={titleContainer}
+              initial="hidden"
+              animate="visible"
+              className="relative font-display text-[26vw] font-bold leading-[0.95] tracking-tight drop-shadow-[0_0_45px_rgba(0,209,255,0.45)] sm:text-[18vw] md:text-[14rem]"
+            >
+              {/* Blurred aura behind the word for extra bloom. */}
+              <span
+                aria-hidden
+                className="pointer-events-none absolute inset-0 select-none bg-gradient-to-b from-white via-cyan to-violet bg-clip-text text-transparent opacity-50 blur-2xl"
               >
-                {w === "FUTURE" ? <span className="text-gradient">{w}</span> : w}
-              </motion.span>
-            </span>
-          ))} */}
-          Аргус
-        </h1>
+                {TITLE}
+              </span>
+
+              {/* Each glyph carries its own gradient so it's always visible. */}
+              {TITLE.split("").map((ch, i) => (
+                <motion.span
+                  key={i}
+                  variants={letterReveal}
+                  style={{ transformPerspective: 900 }}
+                  className="inline-block bg-gradient-to-b from-white via-cyan to-violet bg-clip-text text-transparent"
+                >
+                  {ch}
+                </motion.span>
+              ))}
+            </motion.h1>
+          </motion.div>
+        </motion.div>
 
         <motion.p
           initial={{ opacity: 0, filter: "blur(10px)" }}
