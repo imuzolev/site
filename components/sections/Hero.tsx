@@ -87,86 +87,91 @@ export function Hero() {
       {/* Animated corner brackets / HUD lines. */}
       <HudFrame />
 
-      {/* Interactive sci-fi sensors — part of the background composition. */}
+      {/* Interactive sci-fi visuals — the right-hand half of the split layout. */}
       <SensorRig place="lower-right" accent="cyan" />
-      <DroneRig place="upper-left" />
+      <DroneRig place="upper-right" />
 
-      {/* Content. */}
-      <motion.div
-        style={{ y: contentY, opacity: contentOpacity }}
-        className="relative z-10 flex flex-col items-center px-6 text-center"
-      >
-        <motion.span
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4, duration: 0.8 }}
-          className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-[11px] uppercase tracking-[0.3em] text-cyan backdrop-blur"
-        >
-          <span className="h-1.5 w-1.5 animate-pulse-glow rounded-full bg-teal" />
-          Autonomous Aerial Systems
-        </motion.span>
-
+      {/* Content — split layout: text on the left, 3D visuals on the right. */}
+      <div className="relative z-10 grid w-full max-w-7xl grid-cols-1 items-center gap-10 px-6 md:grid-cols-2 md:gap-12">
         <motion.div
-          style={{ rotateX: tiltX, rotateY: tiltY, transformPerspective: 1000 }}
-          className="[transform-style:preserve-3d]"
+          style={{ y: contentY, opacity: contentOpacity }}
+          className="flex flex-col items-center text-center md:items-start md:text-left"
         >
-          {/* Gentle idle float. */}
-          <motion.div
-            animate={{ y: [0, -10, 0] }}
-            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+          <motion.span
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4, duration: 0.8 }}
+            className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-[11px] uppercase tracking-[0.3em] text-cyan backdrop-blur"
           >
-            <motion.h1
-              variants={titleContainer}
-              initial="hidden"
-              animate="visible"
-              className="relative font-display text-[26vw] font-bold leading-[0.95] tracking-tight drop-shadow-[0_0_45px_rgba(0,209,255,0.45)] sm:text-[18vw] md:text-[14rem]"
-            >
-              {/* Blurred aura behind the word for extra bloom. */}
-              <span
-                aria-hidden
-                className="pointer-events-none absolute inset-0 select-none bg-gradient-to-b from-white via-cyan to-violet bg-clip-text text-transparent opacity-50 blur-2xl"
-              >
-                {TITLE}
-              </span>
+            <span className="h-1.5 w-1.5 animate-pulse-glow rounded-full bg-teal" />
+            Autonomous Aerial Systems
+          </motion.span>
 
-              {/* Each glyph carries its own gradient so it's always visible. */}
-              {TITLE.split("").map((ch, i) => (
-                <motion.span
-                  key={i}
-                  variants={letterReveal}
-                  style={{ transformPerspective: 900 }}
-                  className="inline-block bg-gradient-to-b from-white via-cyan to-violet bg-clip-text text-transparent"
+          <motion.div
+            style={{ rotateX: tiltX, rotateY: tiltY, transformPerspective: 1000 }}
+            className="[transform-style:preserve-3d]"
+          >
+            {/* Gentle idle float. */}
+            <motion.div
+              animate={{ y: [0, -10, 0] }}
+              transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+            >
+              <motion.h1
+                variants={titleContainer}
+                initial="hidden"
+                animate="visible"
+                className="relative font-display text-7xl font-bold leading-[0.95] tracking-tight drop-shadow-[0_0_45px_rgba(0,209,255,0.45)] sm:text-8xl md:text-9xl lg:text-[11rem]"
+              >
+                {/* Blurred aura behind the word for extra bloom. */}
+                <span
+                  aria-hidden
+                  className="pointer-events-none absolute inset-0 select-none bg-gradient-to-b from-white via-cyan to-violet bg-clip-text text-transparent opacity-50 blur-2xl"
                 >
-                  {ch}
-                </motion.span>
-              ))}
-            </motion.h1>
+                  {TITLE}
+                </span>
+
+                {/* Each glyph carries its own gradient so it's always visible. */}
+                {TITLE.split("").map((ch, i) => (
+                  <motion.span
+                    key={i}
+                    variants={letterReveal}
+                    style={{ transformPerspective: 900 }}
+                    className="inline-block bg-gradient-to-b from-white via-cyan to-violet bg-clip-text text-transparent"
+                  >
+                    {ch}
+                  </motion.span>
+                ))}
+              </motion.h1>
+            </motion.div>
+          </motion.div>
+
+          <motion.p
+            initial={{ opacity: 0, filter: "blur(10px)" }}
+            animate={{ opacity: 1, filter: "blur(0px)" }}
+            transition={{ delay: 1.4, duration: 1 }}
+            className="mt-8 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-base font-light text-white/70 sm:text-xl md:justify-start"
+          >
+            <span>Autonomous Intelligence.</span>
+            <span className="text-cyan neon-cyan">Precision.</span>
+            <span className="text-violet">Speed.</span>
+          </motion.p>
+
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.7, duration: 0.8 }}
+            className="mt-12 flex flex-col items-center gap-4 sm:flex-row md:items-start"
+          >
+            <MagneticButton href="#showcase">Explore</MagneticButton>
+            <MagneticButton href="#contact" variant="ghost">
+              Contact
+            </MagneticButton>
           </motion.div>
         </motion.div>
 
-        <motion.p
-          initial={{ opacity: 0, filter: "blur(10px)" }}
-          animate={{ opacity: 1, filter: "blur(0px)" }}
-          transition={{ delay: 1.4, duration: 1 }}
-          className="mt-8 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-base font-light text-white/70 sm:text-xl"
-        >
-          <span>Autonomous Intelligence.</span>
-          <span className="text-cyan neon-cyan">Precision.</span>
-          <span className="text-violet">Speed.</span>
-        </motion.p>
-
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.7, duration: 0.8 }}
-          className="mt-12 flex flex-col items-center gap-4 sm:flex-row"
-        >
-          <MagneticButton href="#showcase">Explore</MagneticButton>
-          <MagneticButton href="#contact" variant="ghost">
-            Contact
-          </MagneticButton>
-        </motion.div>
-      </motion.div>
+        {/* Right column — breathing room for the absolutely-positioned 3D rigs. */}
+        <div aria-hidden className="hidden h-full min-h-[420px] md:block" />
+      </div>
 
       {/* Scroll cue. */}
       <motion.div
