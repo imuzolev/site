@@ -27,12 +27,12 @@ type Anchor = {
 };
 
 const SECTIONS: Anchor[] = [
-  { id: "top", label: "Welcome", message: "I'm ARIA — your flight guide. Scroll to explore CORTEXIS.", x: "44vw", y: "14vh", side: "center", lean: -3, accent: "#00D1FF" },
+  { id: "top", label: "Welcome", message: "I'm ARIA — your flight guide. Scroll to explore CORTEXIS.", x: "5vw", y: "16vh", side: "left", lean: 8, accent: "#00D1FF" },
   { id: "showcase", label: "Showcase", message: "Meet the VORTEX X-1 — our flagship FPV interceptor.", x: "76vw", y: "28vh", side: "right", lean: -8, accent: "#00FFE5" },
   { id: "technology", label: "Technology", message: "The AI stack: neural nav, thermal vision, edge autonomy.", x: "5vw", y: "24vh", side: "left", lean: 8, accent: "#8B5CF6" },
-  { id: "gallery", label: "Field Footage", message: "Real missions, every environment. Spin the wheel.", x: "44vw", y: "58vh", side: "center", lean: 3, accent: "#00D1FF" },
-  { id: "fleet", label: "The Fleet", message: "Six airframes — from micro interceptors to heavy lifters.", x: "75vw", y: "60vh", side: "right", lean: -8, accent: "#00FFE5" },
-  { id: "contact", label: "Contact", message: "Ready for deployment? Let's talk mission parameters.", x: "6vw", y: "56vh", side: "left", lean: 8, accent: "#8B5CF6" },
+  { id: "gallery", label: "Field Footage", message: "Real missions, every environment. Spin the wheel.", x: "76vw", y: "58vh", side: "right", lean: -8, accent: "#00D1FF" },
+  { id: "fleet", label: "The Fleet", message: "Six airframes — from micro interceptors to heavy lifters.", x: "6vw", y: "60vh", side: "left", lean: 8, accent: "#00FFE5" },
+  { id: "contact", label: "Contact", message: "Ready for deployment? Let's talk mission parameters.", x: "75vw", y: "56vh", side: "right", lean: -8, accent: "#8B5CF6" },
 ];
 
 // Tooltip placement classes per side (+ the little pointer triangle).
