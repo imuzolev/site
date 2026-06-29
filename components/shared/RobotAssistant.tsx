@@ -11,31 +11,45 @@ import {
 } from "framer-motion";
 
 // Anchor sections the assistant guides the visitor through, in page order.
+// Each carries a distinct on-screen landing spot (vw/vh) so the robot "hops"
+// to a different corner per section, plus a tooltip side, facing lean & accent.
 // Only sections that actually carry an id are tracked.
-const SECTIONS = [
-  { id: "top", label: "Welcome", message: "I'm ARIA — your flight guide. Scroll to explore CORTEXIS." },
-  { id: "showcase", label: "Showcase", message: "Meet the VORTEX X-1 — our flagship FPV interceptor." },
-  { id: "technology", label: "Technology", message: "The AI stack: neural nav, thermal vision, edge autonomy." },
-  { id: "gallery", label: "Field Footage", message: "Real missions, every environment. Spin the wheel." },
-  { id: "fleet", label: "The Fleet", message: "Six airframes — from micro interceptors to heavy lifters." },
-  { id: "contact", label: "Contact", message: "Ready for deployment? Let's talk mission parameters." },
-] as const;
+type Side = "left" | "right" | "center";
+type Anchor = {
+  id: string;
+  label: string;
+  message: string;
+  x: string; // viewport-x landing spot
+  y: string; // viewport-y landing spot
+  side: Side; // where the tooltip sits / which way the bot faces
+  lean: number; // resting tilt for this section (deg)
+  accent: string;
+};
 
-const ACCENTS = ["#00D1FF", "#00FFE5", "#8B5CF6", "#00D1FF", "#00FFE5", "#8B5CF6"];
+const SECTIONS: Anchor[] = [
+  { id: "top", label: "Welcome", message: "I'm ARIA — your flight guide. Scroll to explore CORTEXIS.", x: "44vw", y: "14vh", side: "center", lean: -3, accent: "#00D1FF" },
+  { id: "showcase", label: "Showcase", message: "Meet the VORTEX X-1 — our flagship FPV interceptor.", x: "76vw", y: "28vh", side: "right", lean: -8, accent: "#00FFE5" },
+  { id: "technology", label: "Technology", message: "The AI stack: neural nav, thermal vision, edge autonomy.", x: "5vw", y: "24vh", side: "left", lean: 8, accent: "#8B5CF6" },
+  { id: "gallery", label: "Field Footage", message: "Real missions, every environment. Spin the wheel.", x: "44vw", y: "58vh", side: "center", lean: 3, accent: "#00D1FF" },
+  { id: "fleet", label: "The Fleet", message: "Six airframes — from micro interceptors to heavy lifters.", x: "75vw", y: "60vh", side: "right", lean: -8, accent: "#00FFE5" },
+  { id: "contact", label: "Contact", message: "Ready for deployment? Let's talk mission parameters.", x: "6vw", y: "56vh", side: "left", lean: 8, accent: "#8B5CF6" },
+];
+
+// Tooltip placement classes per side (+ the little pointer triangle).
+const TIP: Record<Side, { box: string; arrow: string }> = {
+  right: { box: "right-full top-6 mr-3", arrow: "right-0 top-7 translate-x-1/2" },
+  left: { box: "left-full top-6 ml-3", arrow: "left-0 top-7 -translate-x-1/2" },
+  center: { box: "top-full left-1/2 mt-3 -translate-x-1/2", arrow: "left-1/2 top-0 -translate-x-1/2 -translate-y-1/2" },
+};
 
 export function RobotAssistant() {
   const [active, setActive] = useState(0);
   const [showTip, setShowTip] = useState(true);
   const [hovered, setHovered] = useState(false);
 
-  // --- Scroll-driven motion values (compositor-only, no React re-render) ---
-  const { scrollY, scrollYProgress } = useScroll();
-
-  // Vertical glide that lags the scroll for a smooth "following" feel.
-  const yTarget = useTransform(scrollYProgress, [0, 1], [110, 460]);
-  const y = useSpring(yTarget, { stiffness: 55, damping: 18, mass: 0.7 });
-
-  // Bank/tilt with scroll velocity, then settle back to neutral when idle.
+  // Bank/tilt with scroll velocity (compositor-only, no React re-render), then
+  // settle back to neutral when idle — reads as the robot leaning into flight.
+  const { scrollY } = useScroll();
   const velocity = useVelocity(scrollY);
   const tilt = useSpring(
     useTransform(velocity, [-2500, 0, 2500], [14, 0, -14]),
@@ -80,39 +94,43 @@ export function RobotAssistant() {
     return () => clearTimeout(t);
   }, [active]);
 
-  const accent = ACCENTS[active];
   const section = SECTIONS[active];
+  const accent = section.accent;
   const tipVisible = showTip || hovered;
+  const facing = section.side === "left" ? -1 : 1; // mirror to face the content
+  const tip = TIP[section.side];
 
   return (
     <motion.div
       aria-hidden
-      style={{ y }}
-      className="pointer-events-none fixed right-5 top-0 z-[60] hidden md:block motion-reduce:hidden"
+      className="pointer-events-none fixed left-0 top-0 z-[60] hidden md:block motion-reduce:hidden"
+      // The "hop" to each section's landing spot. Different springs per axis
+      // bow the path into an arc rather than a straight line.
+      animate={{ x: section.x, y: section.y }}
+      transition={{
+        x: { type: "spring", stiffness: 48, damping: 14, mass: 0.9 },
+        y: { type: "spring", stiffness: 80, damping: 18, mass: 0.7 },
+      }}
     >
+      {/* Banking with scroll velocity. */}
       <motion.div style={{ rotate: tilt }}>
-        {/* Per-section nudge + idle bob live on the inner wrapper. */}
         <motion.div
           className="pointer-events-auto relative"
           onHoverStart={() => setHovered(true)}
           onHoverEnd={() => setHovered(false)}
-          animate={{ y: [0, -9, 0], x: active % 2 === 0 ? 0 : -14 }}
-          transition={{
-            y: { duration: 4.5, repeat: Infinity, ease: "easeInOut" },
-            x: { duration: 0.7, ease: [0.22, 1, 0.36, 1] },
-          }}
           whileHover={{ scale: 1.08 }}
         >
-          {/* Tooltip — to the LEFT so it never covers the robot or content edge. */}
+          {/* Section tooltip — placed on the side away from the screen edge so
+              it never covers content. */}
           <AnimatePresence>
             {tipVisible && (
               <motion.div
                 key={active}
-                initial={{ opacity: 0, x: 12, scale: 0.9 }}
-                animate={{ opacity: 1, x: 0, scale: 1 }}
-                exit={{ opacity: 0, x: 12, scale: 0.9 }}
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
                 transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-                className="glass pointer-events-none absolute right-full top-6 mr-3 w-60 rounded-2xl px-4 py-3"
+                className={`glass pointer-events-none absolute w-60 rounded-2xl px-4 py-3 ${tip.box}`}
               >
                 <p
                   className="text-[10px] font-medium uppercase tracking-[0.25em]"
@@ -123,13 +141,22 @@ export function RobotAssistant() {
                 <p className="mt-1 text-[13px] leading-snug text-white/85">
                   {section.message}
                 </p>
-                {/* Pointer toward the robot. */}
-                <span className="glass absolute right-0 top-7 h-3 w-3 translate-x-1/2 rotate-45 rounded-[3px]" />
+                <span className={`glass absolute h-3 w-3 rotate-45 rounded-[3px] ${tip.arrow}`} />
               </motion.div>
             )}
           </AnimatePresence>
 
-          <RobotBot accent={accent} />
+          {/* Idle bob + per-section resting lean & facing. */}
+          <motion.div
+            animate={{ y: [0, -9, 0], rotate: section.lean, scaleX: facing }}
+            transition={{
+              y: { duration: 4.5, repeat: Infinity, ease: "easeInOut" },
+              rotate: { duration: 0.8, ease: [0.22, 1, 0.36, 1] },
+              scaleX: { duration: 0.5 },
+            }}
+          >
+            <RobotBot accent={accent} />
+          </motion.div>
         </motion.div>
       </motion.div>
     </motion.div>
