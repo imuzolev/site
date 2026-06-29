@@ -12,6 +12,12 @@ const ParticleField = dynamic(
   { ssr: false }
 );
 
+// Interactive background sensor (its own lightweight WebGL scene).
+const SensorRig = dynamic(
+  () => import("@/components/shared/SensorRig").then((m) => m.SensorRig),
+  { ssr: false }
+);
+
 const titleWords = ["DRONES", "OF", "THE", "FUTURE"];
 
 const word = {
@@ -62,6 +68,9 @@ export function Hero() {
 
       {/* Animated corner brackets / HUD lines. */}
       <HudFrame />
+
+      {/* Interactive sci-fi sensor — part of the background composition. */}
+      <SensorRig />
 
       {/* Content. */}
       <motion.div
