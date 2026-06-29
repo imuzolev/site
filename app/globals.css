@@ -12,6 +12,9 @@
 
 html {
   scroll-behavior: smooth;
+  /* Page background lives on the root so the fixed dot-grid (negative z-index)
+     can sit above it yet behind all content. Don't move this onto <body>. */
+  background-color: var(--bg);
 }
 
 /* Keep section headings clear of the fixed navbar when jumping via #anchors
@@ -32,7 +35,6 @@ html.lenis {
 }
 
 body {
-  background-color: var(--bg);
   color: #f5f5f5;
   font-family: var(--font-sans), system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;

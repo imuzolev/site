@@ -24,7 +24,7 @@ const DroneRig = dynamic(
   { ssr: false }
 );
 
-const TITLE = "Аргус";
+const TITLE = "ARGUS";
 
 // Staggered per-letter reveal: each glyph flips up out of the depth.
 const titleContainer = {

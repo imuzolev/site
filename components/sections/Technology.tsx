@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { useTilt } from "@/hooks/useTilt";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import { Reveal } from "@/components/ui/Reveal";
 import { TECHNOLOGY } from "@/lib/data";
 import { fadeUp, stagger, VIEWPORT } from "@/animations/variants";
 
@@ -20,17 +21,19 @@ export function Technology() {
           className="mb-16"
         />
 
-        <motion.div
-          variants={stagger(0, 0.1)}
-          initial="hidden"
-          whileInView="visible"
-          viewport={VIEWPORT}
-          className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
-        >
-          {TECHNOLOGY.map((tech, i) => (
-            <TechCard key={tech.title} {...tech} index={i} />
-          ))}
-        </motion.div>
+        <Reveal from="zoom">
+          <motion.div
+            variants={stagger(0, 0.1)}
+            initial="hidden"
+            whileInView="visible"
+            viewport={VIEWPORT}
+            className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
+          >
+            {TECHNOLOGY.map((tech, i) => (
+              <TechCard key={tech.title} {...tech} index={i} />
+            ))}
+          </motion.div>
+        </Reveal>
       </div>
     </section>
   );

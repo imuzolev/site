@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { SmartVideo } from "@/components/ui/SmartVideo";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import { Reveal } from "@/components/ui/Reveal";
 import { SHOWCASE } from "@/lib/data";
 import { fadeRight, stagger, VIEWPORT } from "@/animations/variants";
 
@@ -29,7 +30,7 @@ export function DroneShowcase() {
           className="mb-16 max-w-3xl"
         />
 
-        <div className="grid items-center gap-10 lg:grid-cols-[1.15fr_0.85fr]">
+        <Reveal from="left" className="grid items-center gap-10 lg:grid-cols-[1.15fr_0.85fr]">
           {/* Video panel. */}
           <div
             ref={ref}
@@ -89,7 +90,7 @@ export function DroneShowcase() {
               </motion.li>
             ))}
           </motion.ul>
-        </div>
+        </Reveal>
       </div>
     </section>
   );

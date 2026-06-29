@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { useCountUp } from "@/hooks/useCountUp";
+import { Reveal } from "@/components/ui/Reveal";
 import { STATS } from "@/lib/data";
 import { fadeUp, stagger, VIEWPORT } from "@/animations/variants";
 
@@ -9,17 +10,19 @@ export function Numbers() {
   return (
     <section className="relative px-6 py-24">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,209,255,0.08),transparent_60%)]" />
-      <motion.div
-        variants={stagger(0, 0.12)}
-        initial="hidden"
-        whileInView="visible"
-        viewport={VIEWPORT}
-        className="relative mx-auto grid max-w-6xl grid-cols-2 gap-8 lg:grid-cols-4"
-      >
-        {STATS.map((stat) => (
-          <Stat key={stat.label} {...stat} />
-        ))}
-      </motion.div>
+      <Reveal from="right">
+        <motion.div
+          variants={stagger(0, 0.12)}
+          initial="hidden"
+          whileInView="visible"
+          viewport={VIEWPORT}
+          className="relative mx-auto grid max-w-6xl grid-cols-2 gap-8 lg:grid-cols-4"
+        >
+          {STATS.map((stat) => (
+            <Stat key={stat.label} {...stat} />
+          ))}
+        </motion.div>
+      </Reveal>
     </section>
   );
 }

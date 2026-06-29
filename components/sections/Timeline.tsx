@@ -3,6 +3,7 @@
 import { useRef } from "react";
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import { Reveal } from "@/components/ui/Reveal";
 import { TIMELINE } from "@/lib/data";
 import { VIEWPORT } from "@/animations/variants";
 
@@ -24,6 +25,7 @@ export function Timeline() {
           className="mb-20"
         />
 
+        <Reveal from="left">
         <div ref={ref} className="relative pl-10 md:pl-0">
           {/* Static rail. */}
           <div className="absolute left-3 top-0 h-full w-px bg-white/10 md:left-1/2 md:-translate-x-1/2" />
@@ -39,6 +41,7 @@ export function Timeline() {
             ))}
           </div>
         </div>
+        </Reveal>
       </div>
     </section>
   );

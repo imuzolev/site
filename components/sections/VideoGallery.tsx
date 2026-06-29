@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
 import { SmartVideo } from "@/components/ui/SmartVideo";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import { Reveal } from "@/components/ui/Reveal";
 import { GALLERY } from "@/lib/data";
 import { cn } from "@/lib/utils";
 
@@ -63,6 +64,7 @@ export function VideoGallery() {
       </div>
 
       {/* 3D wheel stage. */}
+      <Reveal from="zoom">
       <div
         className="relative mx-auto flex h-[440px] max-w-6xl items-center justify-center sm:h-[540px]"
         style={{ perspective: "1600px" }}
@@ -158,6 +160,7 @@ export function VideoGallery() {
           })}
         </div>
       </div>
+      </Reveal>
 
       {/* Controls. */}
       <div className="relative mt-12 flex items-center justify-center gap-6">

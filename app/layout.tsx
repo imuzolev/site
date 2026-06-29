@@ -36,8 +36,8 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${display.variable} ${sans.variable}`}>
-      <body className="bg-ink-950 text-white antialiased">{children}</body>
+    <html lang="en" className={`${display.variable} ${sans.variable} bg-ink-950`}>
+      <body className="text-white antialiased">{children}</body>
     </html>
   );
 }

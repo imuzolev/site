@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { useTilt } from "@/hooks/useTilt";
 import { SmartVideo } from "@/components/ui/SmartVideo";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import { Reveal } from "@/components/ui/Reveal";
 import { FLEET, type Drone } from "@/lib/data";
 import { fadeUp, stagger, VIEWPORT } from "@/animations/variants";
 
@@ -18,17 +19,19 @@ export function DroneFleet() {
           className="mb-16"
         />
 
-        <motion.div
-          variants={stagger(0, 0.08)}
-          initial="hidden"
-          whileInView="visible"
-          viewport={VIEWPORT}
-          className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
-        >
-          {FLEET.map((drone, i) => (
-            <FleetCard key={drone.id} drone={drone} index={i} />
-          ))}
-        </motion.div>
+        <Reveal from="up">
+          <motion.div
+            variants={stagger(0, 0.08)}
+            initial="hidden"
+            whileInView="visible"
+            viewport={VIEWPORT}
+            className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
+          >
+            {FLEET.map((drone, i) => (
+              <FleetCard key={drone.id} drone={drone} index={i} />
+            ))}
+          </motion.div>
+        </Reveal>
       </div>
     </section>
   );

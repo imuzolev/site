@@ -5,6 +5,7 @@ import { Preloader } from "@/components/shared/Preloader";
 import { CursorGlow } from "@/components/shared/CursorGlow";
 import { ScrollProgress } from "@/components/shared/ScrollProgress";
 import { NoiseOverlay } from "@/components/shared/NoiseOverlay";
+import { DotGrid } from "@/components/shared/DotGrid";
 import { RobotAssistant } from "@/components/shared/RobotAssistant";
 import { Navbar } from "@/components/shared/Navbar";
 import { Marquee } from "@/components/shared/Marquee";
@@ -37,6 +38,7 @@ const Footer = dynamic(() =>
 export default function Home() {
   return (
     <>
+      <DotGrid />
       <Preloader />
       <CursorGlow />
       <ScrollProgress />

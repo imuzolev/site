@@ -4,6 +4,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { MagneticButton } from "@/components/ui/MagneticButton";
+import { Reveal } from "@/components/ui/Reveal";
 import { fadeUp, VIEWPORT } from "@/animations/variants";
 
 export function Contact() {
@@ -20,7 +21,7 @@ export function Contact() {
     <section id="contact" className="relative px-6 py-28 md:py-36">
       <div className="absolute left-1/2 top-1/2 h-[420px] w-[420px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-cyan/10 blur-[140px]" />
 
-      <div className="relative mx-auto max-w-3xl">
+      <Reveal from="right" className="relative mx-auto max-w-3xl">
         <SectionHeading
           eyebrow="Establish Contact"
           title="Request A Briefing"
@@ -58,7 +59,7 @@ export function Contact() {
             <MagneticButton>{sent ? "Sent" : "Transmit"}</MagneticButton>
           </div>
         </motion.form>
-      </div>
+      </Reveal>
     </section>
   );
 }
