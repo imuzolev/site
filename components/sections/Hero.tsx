@@ -88,7 +88,7 @@ export function Hero() {
         </motion.span>
 
         <h1 className="font-display text-[15vw] font-bold leading-[0.9] tracking-tight text-white sm:text-[12vw] md:text-[9rem]">
-          {titleWords.map((w, i) => (
+          {/* {titleWords.map((w, i) => (
             <span key={w} className="mx-2 inline-block overflow-hidden align-bottom">
               <motion.span
                 custom={i}
@@ -100,7 +100,8 @@ export function Hero() {
                 {w === "FUTURE" ? <span className="text-gradient">{w}</span> : w}
               </motion.span>
             </span>
-          ))}
+          ))} */}
+          Аргус
         </h1>
 
         <motion.p
